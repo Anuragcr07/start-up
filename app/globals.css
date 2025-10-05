@@ -1,26 +1,487 @@
-@import "tailwindcss";
-  
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap'); /* Added Inter font */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --radius: 0.5rem;
+    /* New Design System Variables */
+    --primary-color: #6a0572; /* Deep violet */
+    --secondary-color: #a82098; /* Muted magenta */
+    --accent-color: #f7b32b; /* Golden yellow for highlights */
+    --text-color-dark: #333333;
+    --text-color-light: #ffffff;
+    --background-light: #f4f4f4;
+    --background-dark: #e0e0e0;
+    --border-color: #e0e0e0;
+
+    /* For Shadcn/ui or other components that use these */
+    --background: var(--background-light);
+    --foreground: var(--text-color-dark);
+    --primary: var(--primary-color);
+    --primary-foreground: var(--text-color-light);
+    --secondary: var(--background-dark);
+    --secondary-foreground: var(--text-color-dark);
+    --accent: var(--accent-color);
+    --accent-foreground: var(--text-color-dark);
+    --border: var(--border-color);
+    --input: var(--border-color);
+    --ring: var(--primary-color);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif; /* Use Inter as primary font */
+    color: var(--text-color-dark);
+    background-color: var(--background-light);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Keyframe Animations */
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes zoomIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes scaleXIn {
+    from { opacity: 0; transform: scaleX(0); }
+    to { opacity: 1; transform: scaleX(1); }
+  }
+
+  /* Animated Utilities/Classes */
+  .animated-section {
+    @apply relative overflow-hidden; /* Ensures content slides in without overflow */
+  }
+
+  .animated-heading {
+    @apply opacity-0 -translate-y-5 animate-[fadeInDown_0.8s_ease-out_forwards];
+    animation-delay: 0.4s;
+  }
+
+  .animated-text {
+    @apply opacity-0 -translate-y-5 animate-[fadeInDown_0.8s_ease-out_forwards];
+    animation-delay: 0.2s; /* Default delay, can be overridden */
+  }
+
+  /* Specific Component Overhauls */
+  .pink_container {
+    @apply w-full min-h-[530px] flex justify-center items-center flex-col py-10 px-6
+           bg-gradient-to-br from-[var(--primary-color)] to-[var(--secondary-color)]
+           text-[var(--text-color-light)] text-center
+           relative overflow-hidden
+           rounded-b-[50px] shadow-xl; /* Combined with new design */
+  }
+  .pink_container.animated-section {
+    /* No additional animation for the container itself, its children animate */
+    min-height: 230px; /* Specific override for detail/form pages */
+  }
+
+
+  .tag {
+    @apply bg-[var(--accent-color)] px-6 py-3 font-bold rounded-sm uppercase relative
+           text-[var(--text-color-dark)] tracking-wider mb-4; /* Adjusted styling */
+    animation-delay: 0.2s; /* Apply initial delay */
+  }
+  .tag.animated-text {
+    @apply opacity-0 -translate-y-5 animate-[fadeInDown_0.8s_ease-out_forwards];
+  }
+
+
+  .heading {
+    @apply font-extrabold sm:text-[3.5rem] sm:leading-[1.2] text-[2.8rem] leading-[1.2]
+           max-w-5xl text-center my-5; /* Adjusted font sizes and line heights */
+  }
+  .heading.animated-heading {
+    @apply opacity-0 -translate-y-5 animate-[fadeInDown_0.8s_ease-out_forwards];
+    animation-delay: 0.4s;
+  }
+  .pink_container .heading {
+     /* Ensures text color is white for headings in the pink container */
+    @apply text-[var(--text-color-light)];
+  }
+
+  .sub-heading {
+    @apply font-medium text-[1.5rem] leading-[1.5] max-w-[800px] text-center break-words
+           mx-auto mb-10; /* Adjusted font size and max-width */
+  }
+  .sub-heading.animated-text {
+    @apply opacity-0 -translate-y-5 animate-[fadeInDown_0.8s_ease-out_forwards];
+    animation-delay: 0.6s;
+  }
+
+  .section_container {
+    @apply px-6 py-10 max-w-7xl mx-auto;
+  }
+
+  .section_container.content-section,
+  .section_container.form-section {
+    @apply px-10 py-10 max-w-[1000px] md:max-w-[800px] mx-auto
+           -mt-[60px] mb-10 bg-white rounded-[20px] shadow-xl relative z-10
+           opacity-0 translate-y-8 animate-[fadeInUp_0.8s_ease-out_forwards];
+    animation-delay: 0.8s;
+  }
+
+
+  .card_grid {
+    @apply grid md:grid-cols-3 sm:grid-cols-2 gap-8; /* Increased gap */
+  }
+
+  .card_grid-sm {
+    @apply grid sm:grid-cols-2 gap-6; /* Increased gap */
+  }
+
+  .no-result {
+    @apply text-center text-lg text-gray-600 py-12
+           opacity-0 translate-y-5 animate-[fadeInUp_0.8s_ease-out_forwards];
+    animation-delay: 1.2s;
+  }
+
+.post-image {
+    @apply w-full h-auto max-h-[500px] object-cover rounded-xl border border-[var(--border-color)]
+           transition-transform duration-500 ease-in-out
+           opacity-0 scale-95 animate-[zoomIn_0.8s_ease-out_forwards];
+    animation-delay: 1s;
+  }
+  .post-image:hover {
+    @apply scale-[1.01]; /* CORRECTED: Using arbitrary value for custom scale */
+  }
+
+  .author-info {
+    @apply flex justify-between items-center gap-5 mb-6 pb-5 border-b border-[var(--border-color)]
+           opacity-0 translate-y-5 animate-[fadeInUp_0.8s_ease-out_forwards];
+    animation-delay: 1.2s;
+  }
+
+  .author-link {
+    @apply flex gap-3 items-center text-inherit no-underline transition-colors duration-300;
+  }
+  .author-link:hover .author-name {
+    @apply text-[var(--primary-color)];
+  }
+
+  .profile-pic {
+    @apply rounded-full object-cover border-[3px] border-[var(--primary-color)]
+           transition-transform duration-300 ease-in-out;
+  }
+  .profile-pic:hover {
+    @apply scale-105;
+  }
+
+  .author-name {
+    @apply text-xl font-bold mb-0;
+  }
+
+  .author-username {
+    @apply text-base text-gray-600;
+  }
+
+  .category-tag {
+    @apply bg-[var(--accent-color)] text-[var(--text-color-dark)]
+           px-4 py-2 rounded-full font-semibold text-sm
+           transition-colors duration-300 ease-in-out;
+  }
+  .category-tag:hover {
+    @apply bg-opacity-90; /* darken(var(--accent-color), 10%); */
+  }
+
+  .section-title {
+    @apply text-2xl font-bold mb-5 text-[var(--primary-color)]
+           opacity-0 translate-y-5 animate-[fadeInUp_0.8s_ease-out_forwards];
+    animation-delay: 1.4s;
+  }
+
+  .pitch-content {
+    @apply text-lg leading-relaxed text-gray-700
+           opacity-0 translate-y-5 animate-[fadeInUp_0.8s_ease-out_forwards];
+    animation-delay: 1.6s;
+  }
+  .pitch-content p, .pitch-content li {
+    @apply mb-4;
+  }
+  .pitch-content h1, .pitch-content h2, .pitch-content h3 {
+    @apply text-[var(--primary-color)] mt-6 mb-3;
+  }
+
+
+  .divider {
+    @apply border-none border-t border-dashed border-gray-400 max-w-4xl my-16 mx-auto
+           opacity-0 scale-x-0 animate-[scaleXIn_0.8s_ease-out_forwards];
+    animation-delay: 1.8s;
+  }
+
+  .editor-picks-section {
+    @apply pt-5
+           opacity-0 translate-y-5 animate-[fadeInUp_0.8s_ease-out_forwards];
+    animation-delay: 2s;
+  }
+
+
+  /* startupcard - Re-styling existing Tailwind component */
+  .startup-card {
+    @apply bg-white border-[5px] border-gray-200 py-6 px-5 rounded-[15px] shadow-lg
+           hover:border-[var(--primary-color)] transition-all duration-300 ease-in-out
+           hover:shadow-xl hover:bg-violet-50 /* Adjusted hover background */
+           opacity-0 translate-y-8 animate-[fadeInUp_0.6s_ease-out_forwards]; /* Animation applied here */
+  }
+  .startup-card:nth-child(1) { animation-delay: 0.2s; } /* Staggering for home page grid */
+  .startup-card:nth-child(2) { animation-delay: 0.3s; }
+  .startup-card:nth-child(3) { animation-delay: 0.4s; }
+  .startup-card:nth-child(4) { animation-delay: 0.5s; }
+  .startup-card:nth-child(5) { animation-delay: 0.6s; }
+  /* Staggering for editor picks */
+  .card_grid-sm .startup-card:nth-child(1) { animation-delay: 2.2s; }
+  .card_grid-sm .startup-card:nth-child(2) { animation-delay: 2.3s; }
+  .card_grid-sm .startup-card:nth-child(3) { animation-delay: 2.4s; }
+
+
+  .startup-card_date {
+    @apply font-medium text-base bg-violet-100 text-purple-700 px-4 py-2 rounded-full
+           group-hover:bg-white; /* Adjusted colors */
+  }
+
+  .startup-card_desc {
+    @apply font-normal text-base line-clamp-2 my-3 text-gray-600 break-words; /* Adjusted colors */
+  }
+
+  .startup-card_img {
+    @apply w-full h-[164px] rounded-lg object-cover; /* Adjusted rounded */
+  }
+
+  .startup-card_btn {
+    @apply rounded-full bg-[var(--primary-color)] text-[var(--text-color-light)]
+           font-medium text-base px-5 py-3 transition-colors duration-300 ease-in-out;
+  }
+  .startup-card_btn:hover {
+    @apply bg-[var(--secondary-color)];
+  }
+
+  /* startupform - Re-styling existing Tailwind component */
+  .startup-form {
+    @apply max-w-2xl mx-auto bg-white my-10 p-8 space-y-6 rounded-2xl shadow-lg; /* Adjusted padding, spacing, shadow */
+  }
+
+  .startup-form_label {
+    @apply font-bold text-lg text-[var(--text-color-dark)] uppercase mb-2; /* Adjusted styling */
+  }
+
+  .startup-form_input,
+  .startup-form_textarea {
+    @apply border-[2px] border-[var(--border-color)] px-5 py-3 text-lg text-[var(--text-color-dark)]
+           font-semibold rounded-xl mt-2 placeholder:text-gray-400 bg-gray-50
+           focus:border-[var(--primary-color)] focus:ring-[3px] focus:ring-[var(--primary-color)] focus:ring-opacity-20
+           transition-all duration-300 ease-in-out !important; /* Adjusted border, padding, rounded, focus */
+  }
+  .startup-form_textarea {
+    @apply rounded-[15px] min-h-[120px]; /* Specific for textarea */
+  }
+
+
+  .startup-form_error {
+    @apply text-red-600 mt-2 text-sm ml-2;
+  }
+
+  .startup-form_editor {
+    @apply mt-3 border-[2px] border-[var(--border-color)] rounded-xl
+           text-lg text-[var(--text-color-dark)] font-semibold
+           focus:border-[var(--primary-color)] focus:ring-[3px] focus:ring-[var(--primary-color)] focus:ring-opacity-20
+           transition-all duration-300 ease-in-out !important;
+  }
+  .w-md-editor-toolbar {
+    @apply p-3 !important; /* Adjusted padding for editor toolbar */
+  }
+
+
+  .startup-form_btn {
+    @apply bg-[var(--primary-color)] text-[var(--text-color-light)] border-[3px] border-[var(--primary-color)]
+           rounded-xl p-4 min-h-[60px] w-full font-bold text-lg
+           hover:bg-[var(--secondary-color)] hover:border-[var(--secondary-color)]
+           transition-all duration-300 ease-in-out !important; /* Adjusted styling */
+  }
+
+
+  /* view */
+  .view-container {
+    @apply flex justify-end items-center mt-5 fixed bottom-4 right-4 z-20; /* Adjusted position, z-index */
+  }
+
+  .view-text {
+    @apply font-medium text-base bg-violet-100 text-purple-700 px-4 py-2 rounded-lg capitalize; /* Adjusted colors */
+  }
+
+
+  /* Tailwind-friendly custom patterns (adjusted) */
+  .pattern {
+    background-image: linear-gradient(
+      to right,
+      transparent 49.5%,
+      rgba(var(--accent-color-rgb), 0.2) 49.5%, /* Using RGB for transparency */
+      rgba(var(--accent-color-rgb), 0.6) 50.5%,
+      transparent 50.5%
+    );
+    background-size: 5% 100%;
+    background-position: center;
+    background-repeat: repeat-x;
+  }
+
+  /* Tag triangle removed for cleaner look, if you want it back, re-add logic */
+  .tag-tri {
+    /* @apply before:content-[''] before:absolute before:top-2 before:left-2 before:border-t-[10px] before:border-t-black before:border-r-[10px] before:border-r-transparent after:content-[''] after:absolute after:bottom-2 after:right-2 after:border-b-[10px] after:border-b-black after:border-l-[10px] after:border-l-transparent; */
+  }
+
+  /* Helper for prose markdown if not using @tailwindcss/typography */
+  .prose {
+    @apply max-w-none; /* Reset Tailwind's default max-width for prose */
+  }
+
+  /* Responsive adjustments using Tailwind's breakpoints */
+  @screen sm {
+    .heading {
+      @apply text-[3rem];
+    }
+    .sub-heading {
+      @apply text-[1.3rem];
+    }
+  }
+
+  @screen md {
+    .pink_container {
+      @apply py-20 px-10;
+    }
+    .heading {
+      @apply text-[3.5rem];
+    }
+    .sub-heading {
+      @apply text-[1.5rem];
+    }
+    .section_container.content-section,
+    .section_container.form-section {
+      @apply px-12 py-12;
+    }
+    .section-title {
+      @apply text-3xl;
+    }
+  }
+}
+
+@layer utilities {
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
+
+  /* Updated text utility classes to use new palette and Inter font */
+  .text-30-extrabold {
+    @apply text-3xl font-extrabold text-[var(--text-color-light)] font-inter;
+  }
+
+  .text-30-bold {
+    @apply text-3xl font-bold text-[var(--text-color-dark)] font-inter;
+  }
+
+  .text-30-semibold {
+    @apply font-semibold text-3xl text-[var(--text-color-dark)] font-inter;
+  }
+
+  .text-26-semibold {
+    @apply font-semibold text-2xl text-[var(--text-color-dark)] font-inter;
+  }
+
+  .text-24-black {
+    @apply text-2xl font-black text-[var(--text-color-dark)] font-inter;
+  }
+
+  .text-20-medium {
+    @apply font-medium text-xl text-[var(--text-color-dark)] font-inter;
+  }
+
+  .text-16-medium {
+    @apply font-medium text-base text-[var(--text-color-dark)] font-inter;
+  }
+
+  .text-14-normal {
+    @apply font-normal text-sm text-gray-300 font-inter; /* Adjusted color */
+  }
+
+  /* profile related styles remain mostly untouched, but could be refactored */
+  .profile_container {
+    @apply w-full pb-10 pt-20 px-6 max-w-7xl mx-auto lg:flex-row flex-col flex gap-10;
+  }
+
+  .profile_card {
+    @apply w-80 px-6 pb-6 pt-20 flex flex-col justify-center items-center bg-[var(--primary-color)] border-[5px] border-[var(--text-color-dark)] shadow-xl rounded-[30px] relative z-0 h-fit max-lg:w-full;
+  }
+
+  .profile_title {
+    @apply w-11/12 bg-white border-[5px] border-[var(--text-color-dark)] rounded-[20px] px-5 py-3 absolute -top-9 after:absolute after:content-[''] after:-top-1 after:right-0 after:-skew-y-6 after:bg-[var(--text-color-dark)] after:-z-[1] after:rounded-[20px] after:w-full after:h-[60px] before:absolute before:content-[''] before:-bottom-1 before:left-0  before:-skew-y-6 before:w-full before:h-[60px] before:bg-[var(--text-color-dark)]  before:-z-[1] before:rounded-[20px] shadow-xl;
+  }
+
+  .profile_image {
+    @apply rounded-full object-cover border-[3px] border-[var(--text-color-dark)];
+  }
+
+  /* idea details */
+  /* .divider is now a component */
+  .view_skeleton {
+    @apply bg-gray-400 h-10 w-24 rounded-lg fixed bottom-3 right-3;
+  }
+
+  /* navbar */
+  .avatar {
+    @apply p-0 focus-visible:ring-0 bg-transparent rounded-full shadow-md !important;
+  }
+
+  .dropdown-menu {
+    @apply w-56 border-[3px] border-[var(--border-color)] bg-white p-5 rounded-2xl shadow-lg !important;
+  }
+
+  .login {
+    @apply border-[3px] border-[var(--primary-color)] py-4 bg-[var(--primary-color)] text-[var(--text-color-light)]
+           relative shadow-md font-bold font-inter
+           hover:shadow-none transition-all duration-300 !important; /* Adjusted styling */
+  }
+
+  /* searchform */
+  .search-form {
+    @apply max-w-3xl w-full h-20 bg-white border-[3px] border-[var(--border-color)] rounded-full text-xl mt-8 px-5 flex items-center gap-5 shadow-md 
+           opacity-0 scale-90 animate-[zoomIn_0.6s_ease-out_forwards];
+    animation-delay: 0.8s;
+  }
+
+  .search-input {
+    @apply flex-1 font-bold placeholder:font-semibold placeholder:text-[var(--text-color-dark)] w-full h-auto outline-none;
+  }
+
+  .search-btn {
+    @apply size-[50px] rounded-full bg-[var(--primary-color)] flex justify-center items-center transition-colors duration-300 hover:bg-[var(--secondary-color)] !important;
+  }
+
+  /* startupcard - now handled in @layer components */
+
+  /* startupform - now handled in @layer components */
+
+  /* view - now handled in @layer components */
+
+  /* category-tag - now handled in @layer components */
+
+  /* .pattern - now handled in @layer components */
+  /* .tag-tri - commented out */
+}
+
+/* Fallback for --accent-color-rgb if browser doesn't support direct CSS var in rgba() */
+@supports (background-color: rgb(var(--accent-color-rgb))) {
+  :root {
+    --accent-color-rgb: 247, 179, 43; /* RGB values of #f7b32b */
+  }
 }

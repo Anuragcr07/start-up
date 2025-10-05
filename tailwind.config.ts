@@ -1,50 +1,40 @@
-import type {Config} from "tailwindcss";
+import type { Config } from "tailwindcss";
 
 const config: Config = {
-	content: [
-		"./pages/**/*.{js,ts,jsx,tsx,mdx}",
-		"./components/**/*.{js,ts,jsx,tsx,mdx}",
-		"./app/**/*.{js,ts,jsx,tsx,mdx}",
-		"./sanity/**/*.{js,ts,jsx,tsx,mdx}",
-	],
-	theme: {
-		extend: {
-			screens: {
-				xs: "475px",
-			},
-			colors: {
-				primary: {
-					"100": "#FFE8F0",
-					DEFAULT: "#EE2B69",
-				},
-				secondary: "#FBE843",
-				black: {
-					"100": "#333333",
-					"200": "#141413",
-					"300": "#7D8087",
-					DEFAULT: "#000000",
-				},
-				white: {
-					"100": "#F7F7F7",
-					DEFAULT: "#FFFFFF",
-				},
-			},
-			fontFamily: {
-				"work-sans": ["var(--font-work-sans)"],
-			},
-			borderRadius: {
-				lg: "var(--radius)",
-				md: "calc(var(--radius) - 2px)",
-				sm: "calc(var(--radius) - 4px)",
-			},
-			boxShadow: {
-				100: "2px 2px 0px 0px rgb(0, 0, 0)",
-				200: "2px 2px 0px 2px rgb(0, 0, 0)",
-				300: "2px 2px 0px 2px rgb(238, 43, 105)",
-			},
-		},
-	},
-	plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
-};
-
+  darkMode: ["class"],
+  content: [
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./sanity/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      fontFamily: {
+        inter: ['Inter', 'sans-serif'],
+        'work-sans': ['Work Sans', 'sans-serif'], // Keep Work Sans if you still need it
+      },
+      colors: {
+        primary: 'var(--primary-color)',
+        secondary: 'var(--secondary-color)',
+        accent: 'var(--accent-color)',
+        'text-dark': 'var(--text-color-dark)',
+        'text-light': 'var(--text-color-light)',
+        'background-light': 'var(--background-light)',
+        'background-dark': 'var(--background-dark)',
+        'border-color': 'var(--border-color)',
+        // ... other colors
+      },
+      boxShadow: {
+        'xl': '0 10px 30px rgba(0, 0, 0, 0.2)',
+        'lg': '0 8px 20px rgba(0, 0, 0, 0.08)',
+        'md': '0 5px 15px rgba(0, 0, 0, 0.05)',
+        'sm': '0 3px 10px rgba(0, 0, 0, 0.03)',
+      },
+    },
+  },
+  plugins: [
+    require('@tailwindcss/typography'), // If you're using this for .prose
+  ],
+}
 export default config;
